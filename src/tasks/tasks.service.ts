@@ -19,4 +19,8 @@ export class TasksService {
     this.tasks.push(task);
     return task;
   }
+
+  findAll() {
+    return this.tasks;
+  }
 }
