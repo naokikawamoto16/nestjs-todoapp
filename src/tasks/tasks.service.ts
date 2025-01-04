@@ -21,14 +21,13 @@ export class TasksService {
   }
 
   findAll(): Task[] {
+    if (!this.tasks) throw new Error('Tasks not found');
     return this.tasks;
   }
 
   findOne(id: number): Task {
     const task = this.tasks.find((task) => task.id === id);
-    if (!task) {
-      throw new Error('Task not found');
-    }
+    if (!task) throw new Error('Task not found');
     return this.tasks.find((task) => task.id === id);
   }
 }

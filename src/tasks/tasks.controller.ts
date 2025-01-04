@@ -21,7 +21,13 @@ export class TasksController {
 
   @Get()
   findAll(): Task[] {
-    return this.tasksService.findAll();
+    let tasks: Task[];
+    try {
+      tasks = this.tasksService.findAll();
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+    return tasks;
   }
 
   @Get(':id')
