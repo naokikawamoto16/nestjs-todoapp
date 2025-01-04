@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { Task } from './interface/task.interface';
@@ -13,7 +20,18 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Task[] {
     return this.tasksService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Task {
+    let task: Task;
+    try {
+      task = this.tasksService.findOne(Number(id));
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+    return task;
   }
 }

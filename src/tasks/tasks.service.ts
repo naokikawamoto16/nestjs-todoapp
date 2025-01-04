@@ -9,7 +9,7 @@ export class TasksService {
     { id: 2, name: 'Task 2', completed: false },
   ];
 
-  create(createTaskDto: CreateTaskDto) {
+  create(createTaskDto: CreateTaskDto): Task {
     const id = this.tasks.length + 1;
     const task: Task = {
       id,
@@ -20,7 +20,15 @@ export class TasksService {
     return task;
   }
 
-  findAll() {
+  findAll(): Task[] {
     return this.tasks;
+  }
+
+  findOne(id: number): Task {
+    const task = this.tasks.find((task) => task.id === id);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    return this.tasks.find((task) => task.id === id);
   }
 }
