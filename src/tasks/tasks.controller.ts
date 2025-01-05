@@ -11,21 +11,22 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
-import { Task } from './interface/task.interface';
+import { Task as TaskInterface } from './interface/task.interface';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Task } from '@prisma/client';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto): Task {
+  async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     return this.tasksService.create(createTaskDto);
   }
 
   @Get()
-  findAll(): Task[] {
-    let tasks: Task[];
+  findAll(): TaskInterface[] {
+    let tasks: TaskInterface[];
     try {
       tasks = this.tasksService.findAll();
     } catch (error) {
@@ -35,8 +36,8 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Task {
-    let task: Task;
+  findOne(@Param('id') id: string): TaskInterface {
+    let task: TaskInterface;
     try {
       task = this.tasksService.findOne(+id);
     } catch (error) {
@@ -46,8 +47,8 @@ export class TasksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto): Task {
-    let task: Task;
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto): TaskInterface {
+    let task: TaskInterface;
     try {
       task = this.tasksService.update(+id, updateTaskDto);
     } catch (error) {
