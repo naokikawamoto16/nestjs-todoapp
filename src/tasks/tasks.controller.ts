@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -52,5 +54,15 @@ export class TasksController {
       throw new NotFoundException(error.message);
     }
     return task;
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  remove(@Param('id') id: string): void {
+    try {
+      this.tasksService.remove(+id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }

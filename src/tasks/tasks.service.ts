@@ -39,4 +39,10 @@ export class TasksService {
     task.completed = updateTaskDto.completed ?? task.completed;
     return task;
   }
+
+  remove(id: number): void {
+    const task = this.findOne(id);
+    if (!task) throw new Error('Task not found');
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
 }
