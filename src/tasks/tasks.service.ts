@@ -9,12 +9,7 @@ import { Task } from '@prisma/client';
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private tasks: TaskInterface[] = [
-    { id: 1, name: 'Task 1', completed: true },
-    { id: 2, name: 'Task 2', completed: false },
-  ];
-
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  create(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.prisma.task.create({
       data: {
         name: createTaskDto.name,
@@ -40,8 +35,8 @@ export class TasksService {
     });
   }
 
-  remove(id: number): void {
-    this.prisma.task.delete({
+  async remove(id: number): Promise<Task> {
+    return this.prisma.task.delete({
       where: { id },
     });
   }

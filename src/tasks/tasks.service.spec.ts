@@ -101,11 +101,17 @@ describe('TasksService', () => {
   });
 
   describe('remove', () => {
-    it('should remove a task', () => {
-      tasksService.remove(1);
-      expect(prismaService.task.delete).toHaveBeenCalledWith({
-        where: { id: 1 },
-      });
+    it('should delete a task', async () => {
+      const expected = {
+        id: 1,
+        name: 'Task 1',
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.task.delete as jest.Mock).mockResolvedValue(expected);
+      const result = await tasksService.remove(1);
+      expect(result).toEqual(expected);
     });
   });
 });

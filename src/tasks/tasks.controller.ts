@@ -19,7 +19,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+  create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     return this.tasksService.create(createTaskDto);
   }
 
@@ -48,7 +48,7 @@ export class TasksController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string): void {
-    this.tasksService.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.tasksService.remove(+id);
   }
 }
