@@ -13,6 +13,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
+import { log } from 'console';
 
 @Controller('tasks')
 export class TasksController {
@@ -29,8 +30,13 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Task | null> {
-    return this.tasksService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Task> {
+    const task = await this.tasksService.findOne(+id);
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    } else {
+      return task;
+    }
   }
 
   // @Patch(':id')
