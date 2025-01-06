@@ -68,6 +68,20 @@ describe('TasksService', () => {
       const result = await tasksService.findAll();
       expect(result).toEqual(expected);
     });
+    it('should return an array of tasks with filter', async () => {
+      const expected = [
+        {
+          id: 1,
+          name: 'Task 1',
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
+      (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
+      const result = await tasksService.findAll({ completed: false });
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('findOne', () => {
