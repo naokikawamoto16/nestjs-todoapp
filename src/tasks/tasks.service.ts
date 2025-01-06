@@ -4,6 +4,7 @@ import { Task as TaskInterface } from './interface/task.interface';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Task } from '@prisma/client';
+import { TasksFilterDto } from './dto/tasks-filter.dto';
 
 @Injectable()
 export class TasksService {
@@ -18,8 +19,10 @@ export class TasksService {
     });
   }
 
-  findAll(): Promise<Task[]> {
-    return this.prisma.task.findMany();
+  findAll(tasksFilterDto?: TasksFilterDto): Promise<Task[]> {
+    return this.prisma.task.findMany({
+      where: tasksFilterDto ? { ...tasksFilterDto } : {},
+    });
   }
 
   findOne(id: number): Promise<Task | null> {

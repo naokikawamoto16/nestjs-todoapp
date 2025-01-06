@@ -8,11 +8,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
+import { TasksFilterDto } from './dto/tasks-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -24,8 +26,9 @@ export class TasksController {
   }
 
   @Get()
-  findAll(): Promise<Task[]> {
-    return this.tasksService.findAll();
+  findAll(@Query() query): Promise<Task[]> {
+    const tasksFilterDto = new TasksFilterDto(query.completed);
+    return this.tasksService.findAll(tasksFilterDto);
   }
 
   @Get(':id')
