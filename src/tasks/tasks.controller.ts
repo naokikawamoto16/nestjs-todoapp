@@ -49,10 +49,6 @@ export class TasksController {
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id') id: string): void {
-    try {
-      this.tasksService.remove(+id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
+    this.tasksService.remove(+id);
   }
 }

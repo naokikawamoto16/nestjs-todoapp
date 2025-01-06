@@ -8,6 +8,7 @@ const mockPrismaService = {
     findMany: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   },
 };
 
@@ -96,6 +97,15 @@ describe('TasksService', () => {
       (prismaService.task.update as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.update(1, { completed: true });
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove a task', () => {
+      tasksService.remove(1);
+      expect(prismaService.task.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
   });
 });

@@ -41,8 +41,8 @@ export class TasksService {
   }
 
   remove(id: number): void {
-    const task = this.findOne(id);
-    if (!task) throw new Error('Task not found');
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    this.prisma.task.delete({
+      where: { id },
+    });
   }
 }
