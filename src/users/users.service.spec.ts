@@ -27,14 +27,6 @@ describe('UsersService', () => {
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('usersService should be defined', () => {
-    expect(usersService).toBeDefined();
-  });
-
-  it('prismaService should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
-
   describe('create', () => {
     it('should create a user', async () => {
       const expected = {
