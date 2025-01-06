@@ -29,3 +29,14 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Migration
+
+```bash
+# migrate
+$ npx prisma migrate dev
+
+# create migration
+$ npx prisma migrate dev --name added_id
+```
+
