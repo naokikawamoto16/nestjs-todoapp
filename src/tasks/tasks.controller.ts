@@ -47,7 +47,10 @@ export class TasksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto): TaskInterface {
+  update(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): TaskInterface {
     let task: TaskInterface;
     try {
       task = this.tasksService.update(+id, updateTaskDto);

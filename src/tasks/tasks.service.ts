@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task as TaskInterface } from './interface/task.interface';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Task } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private tasks: TaskInterface[] = [
     { id: 1, name: 'Task 1', completed: true },
