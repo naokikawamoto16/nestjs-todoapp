@@ -7,6 +7,7 @@ const mockPrismaService = {
     create: jest.fn(),
     findMany: jest.fn(),
     findUnique: jest.fn(),
+    update: jest.fn(),
   },
 };
 
@@ -79,6 +80,21 @@ describe('TasksService', () => {
       };
       (prismaService.task.findUnique as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.findOne(1);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a task', async () => {
+      const expected = {
+        id: 1,
+        name: 'Task 1',
+        completed: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.task.update as jest.Mock).mockResolvedValue(expected);
+      const result = await tasksService.update(1, { completed: true });
       expect(result).toEqual(expected);
     });
   });

@@ -33,13 +33,12 @@ export class TasksService {
     });
   }
 
-  // update(id: number, updateTaskDto: UpdateTaskDto): TaskInterface {
-  //   const task = this.findOne(id);
-  //   if (!task) throw new Error('Task not found');
-  //   task.name = updateTaskDto.name ?? task.name;
-  //   task.completed = updateTaskDto.completed ?? task.completed;
-  //   return task;
-  // }
+  update(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    return this.prisma.task.update({
+      where: { id },
+      data: updateTaskDto,
+    });
+  }
 
   remove(id: number): void {
     const task = this.findOne(id);

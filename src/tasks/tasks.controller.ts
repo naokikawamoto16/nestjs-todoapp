@@ -13,7 +13,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
-import { log } from 'console';
 
 @Controller('tasks')
 export class TasksController {
@@ -39,19 +38,13 @@ export class TasksController {
     }
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskDto: UpdateTaskDto,
-  // ): TaskInterface {
-  //   let task: TaskInterface;
-  //   try {
-  //     task = this.tasksService.update(+id, updateTaskDto);
-  //   } catch (error) {
-  //     throw new NotFoundException(error.message);
-  //   }
-  //   return task;
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): Promise<Task> {
+    return this.tasksService.update(+id, updateTaskDto);
+  }
 
   @Delete(':id')
   @HttpCode(204)
