@@ -25,14 +25,8 @@ export class TasksController {
   }
 
   @Get()
-  findAll(): TaskInterface[] {
-    let tasks: TaskInterface[];
-    try {
-      tasks = this.tasksService.findAll();
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-    return tasks;
+  findAll(): Promise<Task[]> {
+    return this.tasksService.findAll();
   }
 
   @Get(':id')

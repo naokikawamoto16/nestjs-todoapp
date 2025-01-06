@@ -23,9 +23,8 @@ export class TasksService {
     });
   }
 
-  findAll(): TaskInterface[] {
-    if (!this.tasks) throw new Error('Tasks not found');
-    return this.tasks;
+  findAll(): Promise<Task[]> {
+    return this.prisma.task.findMany();
   }
 
   findOne(id: number): TaskInterface {

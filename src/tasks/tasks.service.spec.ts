@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { create } from 'domain';
 
 const mockPrismaService = {
   task: {
     create: jest.fn(),
+    findMany: jest.fn(),
   },
 };
 
@@ -29,13 +31,27 @@ describe('TasksService', () => {
 
   describe('create', () => {
     it('should create a task', async () => {
-      (prismaService.task.create as jest.Mock).mockResolvedValue({
+      const expected = {
         id: 1,
         name: 'Task 1',
         completed: false,
-      });
-      const expected = { id: 1, name: 'Task 1', completed: false };
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.task.create as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.create({ name: 'Task 1' });
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return tasks', async () => {
+      const expected = [
+        { id: 1, name: 'Task 1', completed: false, createdAt: new Date(), updatedAt: new Date() },
+        { id: 2, name: 'Task 2', completed: false, createdAt: new Date(), updatedAt: new Date() },
+      ];
+      (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
+      const result = await tasksService.findAll();
       expect(result).toEqual(expected);
     });
   });
