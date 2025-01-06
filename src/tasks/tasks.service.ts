@@ -27,19 +27,19 @@ export class TasksService {
     return this.prisma.task.findMany();
   }
 
-  findOne(id: number): TaskInterface {
-    const task = this.tasks.find((task) => task.id === id);
-    if (!task) throw new Error('Task not found');
-    return task;
+  findOne(id: number): Promise<Task | null> {
+    return this.prisma.task.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto): TaskInterface {
-    const task = this.findOne(id);
-    if (!task) throw new Error('Task not found');
-    task.name = updateTaskDto.name ?? task.name;
-    task.completed = updateTaskDto.completed ?? task.completed;
-    return task;
-  }
+  // update(id: number, updateTaskDto: UpdateTaskDto): TaskInterface {
+  //   const task = this.findOne(id);
+  //   if (!task) throw new Error('Task not found');
+  //   task.name = updateTaskDto.name ?? task.name;
+  //   task.completed = updateTaskDto.completed ?? task.completed;
+  //   return task;
+  // }
 
   remove(id: number): void {
     const task = this.findOne(id);

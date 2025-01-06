@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
-import { Task as TaskInterface } from './interface/task.interface';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
 
@@ -30,29 +29,23 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): TaskInterface {
-    let task: TaskInterface;
-    try {
-      task = this.tasksService.findOne(+id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-    return task;
+  findOne(@Param('id') id: string): Promise<Task | null> {
+    return this.tasksService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTaskDto: UpdateTaskDto,
-  ): TaskInterface {
-    let task: TaskInterface;
-    try {
-      task = this.tasksService.update(+id, updateTaskDto);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-    return task;
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateTaskDto: UpdateTaskDto,
+  // ): TaskInterface {
+  //   let task: TaskInterface;
+  //   try {
+  //     task = this.tasksService.update(+id, updateTaskDto);
+  //   } catch (error) {
+  //     throw new NotFoundException(error.message);
+  //   }
+  //   return task;
+  // }
 
   @Delete(':id')
   @HttpCode(204)

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { create } from 'domain';
 
 const mockPrismaService = {
   task: {
     create: jest.fn(),
     findMany: jest.fn(),
+    findUnique: jest.fn(),
   },
 };
 
@@ -45,13 +45,40 @@ describe('TasksService', () => {
   });
 
   describe('findAll', () => {
-    it('should return tasks', async () => {
+    it('should return an array of tasks', async () => {
       const expected = [
-        { id: 1, name: 'Task 1', completed: false, createdAt: new Date(), updatedAt: new Date() },
-        { id: 2, name: 'Task 2', completed: false, createdAt: new Date(), updatedAt: new Date() },
+        {
+          id: 1,
+          name: 'Task 1',
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 2,
+          name: 'Task 2',
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.findAll();
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a task', async () => {
+      const expected = {
+        id: 1,
+        name: 'Task 1',
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.task.findUnique as jest.Mock).mockResolvedValue(expected);
+      const result = await tasksService.findOne(1);
       expect(result).toEqual(expected);
     });
   });
