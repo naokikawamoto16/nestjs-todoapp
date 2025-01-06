@@ -1,4 +1,4 @@
 export class UpdateTaskDto {
-  name?: string;
-  completed?: boolean;
+  readonly name?: string;
+  readonly completed?: boolean;
 }

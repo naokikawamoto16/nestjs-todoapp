@@ -1,3 +1,3 @@
 export class CreateTaskDto {
-  name: string;
+  readonly name: string;
 }

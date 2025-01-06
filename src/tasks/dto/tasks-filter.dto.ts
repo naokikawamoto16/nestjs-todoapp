@@ -1,5 +1,5 @@
 export class TasksFilterDto {
-  completed?: boolean;
+  readonly completed?: boolean;
 
   constructor(completed?: string) {
     this.completed =
