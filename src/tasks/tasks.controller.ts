@@ -18,7 +18,9 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
 import { TasksFilterDto } from './dto/tasks-filter.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
