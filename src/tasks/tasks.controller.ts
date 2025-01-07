@@ -34,11 +34,8 @@ export class TasksController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Task> {
     const task = await this.tasksService.findOne(+id);
-    if (!task) {
-      throw new NotFoundException('Task not found');
-    } else {
-      return task;
-    }
+    if (!task) throw new NotFoundException('Task not found');
+    return task;
   }
 
   @Patch(':id')
