@@ -35,8 +35,20 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const { username, email, password }: UpdateUserDto = updateUserDto;
+    let hashedPassword = undefined;
+    if (password) hashedPassword = await this.hashPassword(password);
+    return this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: {
+        username,
+        email,
+        password: hashedPassword,
+      },
+    });
   }
 
   remove(id: number) {

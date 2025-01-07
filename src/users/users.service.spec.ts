@@ -6,6 +6,7 @@ const mockPrismaService = {
   user: {
     create: jest.fn(),
     findUnique: jest.fn(),
+    update: jest.fn(),
   },
 };
 
@@ -66,6 +67,36 @@ describe('UsersService', () => {
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(null);
       const result = await usersService.findOne(1);
       expect(result).toBeNull();
+    });
+  });
+
+  describe('update', () => {
+    it('should update a user', async () => {
+      const expected = {
+        id: 1,
+        username: 'test',
+        email: 'email@example.com',
+        password: 'abcdefg',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.user.update as jest.Mock).mockResolvedValue(expected);
+      const result = await usersService.update(1, {
+        username: 'test1',
+        email: 'email1@example.com',
+        password: 'password',
+      });
+      expect(result).toEqual(expected);
+    });
+    it('should throw an error if user is not found', async () => {
+      (prismaService.user.update as jest.Mock).mockRejectedValue(new Error());
+      await expect(
+        usersService.update(1, {
+          username: 'test1',
+          email: 'email1@example.com',
+          password: 'password',
+        }),
+      ).rejects.toThrow();
     });
   });
 });
