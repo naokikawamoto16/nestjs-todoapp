@@ -27,12 +27,12 @@ export class UsersService {
     return hashedPassword;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: number): Promise<User | null> {
+    return this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
