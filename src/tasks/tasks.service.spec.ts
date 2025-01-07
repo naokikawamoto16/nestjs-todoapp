@@ -39,9 +39,10 @@ describe('TasksService', () => {
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: 1,
       };
       (prismaService.task.create as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.create({ name: 'Task 1' });
+      const result = await tasksService.create(1, { name: 'Task 1' });
       expect(result).toEqual(expected);
     });
   });
@@ -55,6 +56,7 @@ describe('TasksService', () => {
           completed: false,
           createdAt: new Date(),
           updatedAt: new Date(),
+          userId: 1,
         },
         {
           id: 2,
@@ -62,10 +64,11 @@ describe('TasksService', () => {
           completed: false,
           createdAt: new Date(),
           updatedAt: new Date(),
+          userId: 1,
         },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.findAll();
+      const result = await tasksService.findAll(1);
       expect(result).toEqual(expected);
     });
     it('should return an array of tasks with filter', async () => {
@@ -76,10 +79,11 @@ describe('TasksService', () => {
           completed: false,
           createdAt: new Date(),
           updatedAt: new Date(),
+          userId: 1,
         },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.findAll({ completed: false });
+      const result = await tasksService.findAll(1, { completed: false });
       expect(result).toEqual(expected);
     });
   });
@@ -92,9 +96,10 @@ describe('TasksService', () => {
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: 1,
       };
       (prismaService.task.findUnique as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.findOne(1);
+      const result = await tasksService.findOne(1, 1);
       expect(result).toEqual(expected);
     });
   });
@@ -107,9 +112,10 @@ describe('TasksService', () => {
         completed: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: 1,
       };
       (prismaService.task.update as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.update(1, { completed: true });
+      const result = await tasksService.update(1, 1, { completed: true });
       expect(result).toEqual(expected);
     });
   });
@@ -122,9 +128,10 @@ describe('TasksService', () => {
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: 1,
       };
       (prismaService.task.delete as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.remove(1);
+      const result = await tasksService.remove(1, 1);
       expect(result).toEqual(expected);
     });
   });

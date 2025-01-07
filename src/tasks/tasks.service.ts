@@ -9,37 +9,54 @@ import { TasksFilterDto } from './dto/tasks-filter.dto';
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createTaskDto: CreateTaskDto): Promise<Task> {
+  create(userId: number, createTaskDto: CreateTaskDto): Promise<Task> {
     return this.prisma.task.create({
       data: {
         name: createTaskDto.name,
         completed: false,
+        userId,
       },
     });
   }
 
-  findAll(tasksFilterDto?: TasksFilterDto): Promise<Task[]> {
+  findAll(userId: number, tasksFilterDto?: TasksFilterDto): Promise<Task[]> {
     return this.prisma.task.findMany({
-      where: tasksFilterDto ? { ...tasksFilterDto } : {},
+      where: {
+        userId,
+        ...tasksFilterDto,
+      },
     });
   }
 
-  findOne(id: number): Promise<Task | null> {
+  findOne(userId: number, id: number): Promise<Task | null> {
     return this.prisma.task.findUnique({
-      where: { id },
+      where: {
+        userId,
+        id,
+      },
     });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
+  update(
+    userId: number,
+    id: number,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<Task> {
     return this.prisma.task.update({
-      where: { id },
+      where: {
+        userId,
+        id,
+      },
       data: updateTaskDto,
     });
   }
 
-  async remove(id: number): Promise<Task> {
+  async remove(userId: number, id: number): Promise<Task> {
     return this.prisma.task.delete({
-      where: { id },
+      where: {
+        userId,
+        id,
+      },
     });
   }
 }

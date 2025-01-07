@@ -10,6 +10,7 @@ import {
   Post,
   Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
@@ -24,21 +25,27 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksService.create(createTaskDto);
+  create(
+    @Request() req: any,
+    @Body() createTaskDto: CreateTaskDto,
+  ): Promise<Task> {
+    const userId = req.user.id;
+    return this.tasksService.create(userId, createTaskDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Query() query): Promise<Task[]> {
+  findAll(@Request() req: any, @Query() query): Promise<Task[]> {
+    const userId = req.user.id;
     const tasksFilterDto = new TasksFilterDto(query.completed);
-    return this.tasksService.findAll(tasksFilterDto);
+    return this.tasksService.findAll(userId, tasksFilterDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Task> {
-    const task = await this.tasksService.findOne(+id);
+  async findOne(@Request() req: any, @Param('id') id: string): Promise<Task> {
+    const userId = req.user.id;
+    const task = await this.tasksService.findOne(userId, +id);
     if (!task) throw new NotFoundException('Task not found');
     return task;
   }
@@ -46,16 +53,19 @@ export class TasksController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
+    @Request() req: any,
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<Task> {
-    return this.tasksService.update(+id, updateTaskDto);
+    const userId = req.user.id;
+    return this.tasksService.update(userId, +id, updateTaskDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string): Promise<void> {
-    await this.tasksService.remove(+id);
+  async remove(@Request() req: any, @Param('id') id: string): Promise<void> {
+    const userId = req.user.id;
+    await this.tasksService.remove(userId, +id);
   }
 }
