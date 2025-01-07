@@ -35,6 +35,14 @@ export class UsersService {
     });
   }
 
+  findOneByEmail(email: string): Promise<User | null> {
+    return this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const { username, email, password }: UpdateUserDto = updateUserDto;
     let hashedPassword = undefined;

@@ -71,6 +71,27 @@ describe('UsersService', () => {
     });
   });
 
+  describe('findOneByEmail', () => {
+    it('should find a user', async () => {
+      const expected = {
+        id: 1,
+        username: 'test',
+        email: 'email@example.com',
+        password: 'abcdefg',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(expected);
+      const result = await usersService.findOneByEmail('email@example.com');
+      expect(result).toEqual(expected);
+    });
+    it('should return null if user is not found', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(null);
+      const result = await usersService.findOneByEmail('email@example.com');
+      expect(result).toBeNull();
+    });
+  });
+
   describe('update', () => {
     it('should update a user', async () => {
       const expected = {
