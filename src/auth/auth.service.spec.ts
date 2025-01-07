@@ -2,13 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { env } from 'process';
+import { JwtService } from '@nestjs/jwt';
 
 const mockUsersService = {
   findOneByEmail: jest.fn(),
 };
 
+const mockJwtService = {
+  sign: jest.fn(),
+};
+
 describe('AuthService', () => {
   let authService: AuthService;
+  let usersService: UsersService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,10 +25,16 @@ describe('AuthService', () => {
           provide: UsersService,
           useValue: mockUsersService,
         },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
+        },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
+    usersService = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe('validateUser', () => {
@@ -34,9 +47,7 @@ describe('AuthService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      (mockUsersService.findOneByEmail as jest.Mock).mockResolvedValue(
-        expected,
-      );
+      (usersService.findOneByEmail as jest.Mock).mockResolvedValue(expected);
       const result = await authService.validateUser(
         'email@example.com',
         'password',
@@ -44,12 +55,28 @@ describe('AuthService', () => {
       expect(result).toEqual(expected);
     });
     it('should return null', async () => {
-      (mockUsersService.findOneByEmail as jest.Mock).mockResolvedValue(null);
+      (usersService.findOneByEmail as jest.Mock).mockResolvedValue(null);
       const result = await authService.validateUser(
         'email@example.com',
         'password',
       );
       expect(result).toBeNull();
+    });
+  });
+
+  describe('login', () => {
+    it('should return an access token', async () => {
+      const user = {
+        id: 1,
+        username: 'test',
+        email: 'email@example.com',
+        password: env.HASEHDPASS_FOR_TEST,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (jwtService.sign as jest.Mock).mockResolvedValue('token');
+      const result = await authService.login(user);
+      expect(result.accessToken).toBeDefined();
     });
   });
 });
