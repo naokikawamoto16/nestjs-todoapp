@@ -7,6 +7,7 @@ const mockPrismaService = {
     create: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   },
 };
 
@@ -97,6 +98,26 @@ describe('UsersService', () => {
           password: 'password',
         }),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove a user', async () => {
+      const expected = {
+        id: 1,
+        username: 'test',
+        email: 'email@example.com',
+        password: 'abcdefg',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      (prismaService.user.delete as jest.Mock).mockResolvedValue(expected);
+      const result = await usersService.remove(1);
+      expect(result).toEqual(expected);
+    });
+    it('should throw an error if user is not found', async () => {
+      (prismaService.user.delete as jest.Mock).mockRejectedValue(new Error());
+      await expect(usersService.remove(1)).rejects.toThrow();
     });
   });
 });
