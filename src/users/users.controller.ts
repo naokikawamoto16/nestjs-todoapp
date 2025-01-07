@@ -8,11 +8,13 @@ import {
   Delete,
   NotFoundException,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@prisma/client';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -23,6 +25,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
     const user = await this.usersService.findOne(+id);
@@ -30,6 +33,7 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -38,6 +42,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id') id: string): Promise<void> {
