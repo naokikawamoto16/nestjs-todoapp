@@ -38,5 +38,8 @@ $ npx prisma migrate dev
 
 # create migration
 $ npx prisma migrate dev --name added_id
+
+# prisma studio
+$ npx prisma studio
 ```
 
