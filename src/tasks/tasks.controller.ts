@@ -13,7 +13,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TasksService } from './tasks.service';
+import { TasksService, TaskWithSubtasks } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
 import { TasksFilterDto } from './dto/tasks-filter.dto';
@@ -45,7 +45,10 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Request() req: any, @Param('id') id: string): Promise<Task> {
+  async findOne(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<TaskWithSubtasks> {
     const userId = req.user.id;
     const task = await this.tasksService.findOne(userId, +id);
     if (!task) throw new NotFoundException('Task not found');
