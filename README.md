@@ -43,3 +43,15 @@ $ npx prisma migrate dev --name added_id
 $ npx prisma studio
 ```
 
+## ToDo
+- [ ] Refresh token
+- [ ] User roles
+- [ ] Task due date
+  - [ ] Task due date notification
+- [ ] OAuth2
+- [ ] Cache
+- [ ] Tags
+- [ ] Profile Picture
+- [ ] Task priority
+- [ ] Lists
+- [ ] Search

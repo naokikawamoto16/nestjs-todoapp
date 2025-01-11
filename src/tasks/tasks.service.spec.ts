@@ -40,6 +40,7 @@ describe('TasksService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: 1,
+        patientTaskId: null,
       };
       (prismaService.task.create as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.create(1, { name: 'Task 1' });
@@ -57,6 +58,7 @@ describe('TasksService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
           userId: 1,
+          patientTaskId: null,
         },
         {
           id: 2,
@@ -65,6 +67,7 @@ describe('TasksService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
           userId: 1,
+          patientTaskId: null,
         },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
@@ -80,6 +83,7 @@ describe('TasksService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
           userId: 1,
+          patientTaskId: null,
         },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
@@ -97,6 +101,7 @@ describe('TasksService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: 1,
+        patientTaskId: null,
       };
       (prismaService.task.findUnique as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.findOne(1, 1);
@@ -113,6 +118,7 @@ describe('TasksService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: 1,
+        patientTaskId: null,
       };
       (prismaService.task.update as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.update(1, 1, { completed: true });
@@ -129,6 +135,7 @@ describe('TasksService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: 1,
+        patientTaskId: null,
       };
       (prismaService.task.delete as jest.Mock).mockResolvedValue(expected);
       const result = await tasksService.remove(1, 1);
