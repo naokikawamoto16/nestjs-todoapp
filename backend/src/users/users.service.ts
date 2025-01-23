@@ -10,11 +10,10 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { username, email, password } = createUserDto;
+    const { email, password } = createUserDto;
     const hashedPassword = await this.hashPassword(password);
     return this.prismaService.user.create({
       data: {
-        username,
         email,
         password: hashedPassword,
       },
@@ -44,7 +43,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const { username, email, password }: UpdateUserDto = updateUserDto;
+    const { email, password }: UpdateUserDto = updateUserDto;
     let hashedPassword = undefined;
     if (password) hashedPassword = await this.hashPassword(password);
     return this.prismaService.user.update({
@@ -52,7 +51,6 @@ export class UsersService {
         id,
       },
       data: {
-        username,
         email,
         password: hashedPassword,
       },

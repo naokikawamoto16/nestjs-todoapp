@@ -34,7 +34,6 @@ describe('UsersService', () => {
     it('should create a user', async () => {
       const expected = {
         id: 1,
-        username: 'test',
         email: 'email@example.com',
         password: 'abcdefg',
         createdAt: new Date(),
@@ -42,7 +41,6 @@ describe('UsersService', () => {
       };
       (prismaService.user.create as jest.Mock).mockResolvedValue(expected);
       const result = await usersService.create({
-        username: 'test',
         email: 'email@example.com',
         password: 'password',
       });
@@ -54,7 +52,6 @@ describe('UsersService', () => {
     it('should find a user', async () => {
       const expected = {
         id: 1,
-        username: 'test',
         email: 'email@example.com',
         password: 'abcdefg',
         createdAt: new Date(),
@@ -75,7 +72,6 @@ describe('UsersService', () => {
     it('should find a user', async () => {
       const expected = {
         id: 1,
-        username: 'test',
         email: 'email@example.com',
         password: 'abcdefg',
         createdAt: new Date(),
@@ -96,7 +92,6 @@ describe('UsersService', () => {
     it('should update a user', async () => {
       const expected = {
         id: 1,
-        username: 'test',
         email: 'email@example.com',
         password: 'abcdefg',
         createdAt: new Date(),
@@ -104,7 +99,6 @@ describe('UsersService', () => {
       };
       (prismaService.user.update as jest.Mock).mockResolvedValue(expected);
       const result = await usersService.update(1, {
-        username: 'test1',
         email: 'email1@example.com',
         password: 'password',
       });
@@ -114,7 +108,6 @@ describe('UsersService', () => {
       (prismaService.user.update as jest.Mock).mockRejectedValue(new Error());
       await expect(
         usersService.update(1, {
-          username: 'test1',
           email: 'email1@example.com',
           password: 'password',
         }),
@@ -126,7 +119,6 @@ describe('UsersService', () => {
     it('should remove a user', async () => {
       const expected = {
         id: 1,
-        username: 'test',
         email: 'email@example.com',
         password: 'abcdefg',
         createdAt: new Date(),
