@@ -19,7 +19,7 @@ export default function SignUpPage() {
     setError("");
     
     if (password !== confirmPassword) {
-      setError("パスワードが一致しません");
+      setError("Passwords do not match");
       return;
     }
 
@@ -38,7 +38,7 @@ export default function SignUpPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "サインインに失敗しました");
+        throw new Error(errorData.message || "Sign up failed");
       }
 
       window.location.href = "/tasks";
@@ -46,7 +46,7 @@ export default function SignUpPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("予期せぬエラーが発生しました");
+        setError("An unexpected error occurred");
       }
     } finally {
       setIsLoading(false);

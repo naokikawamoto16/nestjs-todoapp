@@ -32,7 +32,7 @@ export default function LoginPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "ログインに失敗しました");
+        throw new Error(errorData.message || "Login failed");
       }
 
       window.location.href = "/tasks";
@@ -40,7 +40,7 @@ export default function LoginPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("予期せぬエラーが発生しました");
+        setError("An unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
