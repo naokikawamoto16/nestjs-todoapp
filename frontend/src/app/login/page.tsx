@@ -35,7 +35,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem('token', data.accessToken)
-      localStorage.setItem('userId', data.user.id)
+      sessionStorage.setItem('userId', data.user.id)
 
       window.location.href = "/tasks";
     } catch (err) {
