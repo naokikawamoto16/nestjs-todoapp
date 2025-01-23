@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, Edit2, Check, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -22,45 +22,168 @@ import {
 } from '@/components/ui/select'
 
 type Task = {
-  id: number
-  text: string
+  id: string
+  name: string
   completed: boolean
+  userId: string
+  createdAt: string
+  updatedAt: string
 }
 
 export default function TaskApp() {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [newTask, setNewTask] = useState('')
   const [filter, setFilter] = useState('all')
-  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
 
-  const addTask = () => {
-    if (newTask.trim() !== '') {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }])
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/tasks', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch tasks')
+        }
+
+        const data = await res.json()
+        setTasks(data)
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('An unexpected error occurred')
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTasks()
+  }, [])
+
+  const addTask = async () => {
+    if (newTask.trim() === '') return
+
+    try {
+      const res = await fetch('http://localhost:3000/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: newTask,
+          completed: false
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to add task')
+      }
+
+      const newTaskData = await res.json()
+      setTasks([...tasks, newTaskData])
       setNewTask('')
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
     }
   }
 
-  const toggleTask = (id: number) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ))
+  const toggleTask = async (id: string) => {
+    try {
+      const task = tasks.find(t => t.id === id)
+      if (!task) return
+
+      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          completed: !task.completed
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to update task')
+      }
+
+      const updatedTask = await res.json()
+      setTasks(tasks.map(t => t.id === id ? updatedTask : t))
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    }
   }
 
-  const deleteTask = (id: number) => {
-    setTasks(tasks.filter(task => task.id !== id))
+  const deleteTask = async (id: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to delete task')
+      }
+
+      setTasks(tasks.filter(task => task.id !== id))
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    }
   }
 
-  const startEditing = (id: number, text: string) => {
+  const startEditing = (id: string, name: string) => {
     setEditingId(id)
-    setEditText(text)
+    setEditText(name)
   }
 
-  const saveEdit = (id: number) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, text: editText } : task
-    ))
-    setEditingId(null)
+  const saveEdit = async (id: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: editText
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to update task')
+      }
+
+      const updatedTask = await res.json()
+      setTasks(tasks.map(t => t.id === id ? updatedTask : t))
+      setEditingId(null)
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    }
   }
 
   const cancelEdit = () => {
@@ -93,48 +216,54 @@ export default function TaskApp() {
               <Plus className="mr-2 h-4 w-4" /> Add
             </Button>
           </div>
-          <ul className="space-y-2">
-            {filteredTasks.map(task => (
-              <li key={task.id} className="flex items-center space-x-2">
-                <Checkbox
-                  checked={task.completed}
-                  onCheckedChange={() => toggleTask(task.id)}
-                />
-                {editingId === task.id ? (
-                  <div className="flex-1 flex items-center space-x-2">
-                    <Input
-                      value={editText}
-                      onChange={(e) => setEditText(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && saveEdit(task.id)}
-                    />
-                    <Button size="sm" onClick={() => saveEdit(task.id)} className="bg-sky-600 hover:bg-sky-700">
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={cancelEdit}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <span 
-                    className={`flex-1 ${task.completed ? 'line-through text-gray-500' : ''}`}
-                    onClick={() => startEditing(task.id, task.text)}
-                  >
-                    {task.text}
-                  </span>
-                )}
-                {editingId !== task.id && (
-                  <>
-                    <Button size="sm" variant="outline" onClick={() => startEditing(task.id, task.text)}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => deleteTask(task.id)}>
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
+          {loading ? (
+            <div className="text-center">Loading tasks...</div>
+          ) : error ? (
+            <div className="text-red-600 text-center">{error}</div>
+          ) : (
+            <ul className="space-y-2">
+              {filteredTasks.map(task => (
+                <li key={task.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={task.completed}
+                    onCheckedChange={() => toggleTask(task.id)}
+                  />
+                  {editingId === task.id ? (
+                    <div className="flex-1 flex items-center space-x-2">
+                      <Input
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && saveEdit(task.id)}
+                      />
+                      <Button size="sm" onClick={() => saveEdit(task.id)} className="bg-sky-600 hover:bg-sky-700">
+                        <Check className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={cancelEdit}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <span 
+                      className={`flex-1 ${task.completed ? 'line-through text-gray-500' : ''}`}
+                      onClick={() => startEditing(task.id, task.name)}
+                    >
+                      {task.name}
+                    </span>
+                  )}
+                  {editingId !== task.id && (
+                    <>
+                      <Button size="sm" variant="outline" onClick={() => startEditing(task.id, task.name)}>
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => deleteTask(task.id)}>
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
         <CardFooter>
           <Select onValueChange={setFilter}>
@@ -152,4 +281,3 @@ export default function TaskApp() {
     </div>
   )
 }
-
