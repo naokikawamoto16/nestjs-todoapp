@@ -29,11 +29,13 @@ export default function LoginPage() {
           password,
         }),
       });
-
+      const data = await res.json();
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error(data.message);
       }
+
+      localStorage.setItem('token', data.accessToken)
+      localStorage.setItem('userId', data.user.id)
 
       window.location.href = "/tasks";
     } catch (err) {
