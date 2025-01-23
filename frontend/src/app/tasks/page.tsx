@@ -77,7 +77,7 @@ export default function TaskApp() {
     <div className="container mx-auto p-4 max-w-md">
       <Card>
         <CardHeader>
-          <CardTitle>Task App</CardTitle>
+          <CardTitle>ToDo App</CardTitle>
           <CardDescription>Manage your tasks efficiently</CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,9 +87,9 @@ export default function TaskApp() {
               placeholder="Add a new task"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && addTask()}
+              onKeyDown={(e) => e.key === 'Enter' && addTask()}
             />
-            <Button onClick={addTask}>
+            <Button onClick={addTask} className="bg-sky-600 hover:bg-sky-700">
               <Plus className="mr-2 h-4 w-4" /> Add
             </Button>
           </div>
@@ -107,7 +107,7 @@ export default function TaskApp() {
                       onChange={(e) => setEditText(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && saveEdit(task.id)}
                     />
-                    <Button size="sm" onClick={() => saveEdit(task.id)}>
+                    <Button size="sm" onClick={() => saveEdit(task.id)} className="bg-sky-600 hover:bg-sky-700">
                       <Check className="h-4 w-4" />
                     </Button>
                     <Button size="sm" variant="outline" onClick={cancelEdit}>
