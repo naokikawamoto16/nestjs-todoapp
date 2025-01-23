@@ -15,11 +15,12 @@ export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(userId: number, createTaskDto: CreateTaskDto): Promise<Task> {
-    const { name, parentTaskId } = createTaskDto;
+    const { name, dueDate, parentTaskId } = createTaskDto;
     return this.prisma.task.create({
       data: {
         name,
         completed: false,
+        dueDate,
         userId,
         parentTaskId,
       },

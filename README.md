@@ -44,7 +44,6 @@ $ npx prisma studio
 ```
 
 ## ToDo
-- [ ] Refresh token
 - [ ] User roles
 - [ ] Task due date
   - [ ] Task due date notification
