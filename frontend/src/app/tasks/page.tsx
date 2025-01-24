@@ -70,14 +70,15 @@ export default function TaskApp() {
 
   const addTask = async () => {
     if (newTask.trim() === '') return
+    console.log(newTask)
 
     try {
-      const res = await fetch('http://localhost:3000/tasks', {
+      const res = await fetch('http://localhost:3001/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        credentials: 'include',
         body: JSON.stringify({
           name: newTask,
           completed: false
@@ -105,12 +106,12 @@ export default function TaskApp() {
       const task = tasks.find(t => t.id === id)
       if (!task) return
 
-      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+      const res = await fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        credentials: 'include',
         body: JSON.stringify({
           completed: !task.completed
         })
@@ -133,9 +134,11 @@ export default function TaskApp() {
 
   const deleteTask = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+      const res = await fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'DELETE',
-        credentials: 'include'
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
       })
 
       if (!res.ok) {
