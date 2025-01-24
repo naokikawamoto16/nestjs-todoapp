@@ -162,12 +162,12 @@ export default function TaskApp() {
 
   const saveEdit = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/tasks/${id}`, {
+      const res = await fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        credentials: 'include',
         body: JSON.stringify({
           name: editText
         })
