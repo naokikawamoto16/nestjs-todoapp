@@ -42,7 +42,7 @@ export default function TaskApp() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const res = await fetch('http://localhost:3000/tasks', {
+        const res = await fetch('http://localhost:3001/tasks', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
