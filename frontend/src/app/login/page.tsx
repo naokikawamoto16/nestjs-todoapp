@@ -21,6 +21,7 @@ export default function LoginPage() {
       setIsLoading(true);
       const res = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
@@ -34,9 +35,7 @@ export default function LoginPage() {
         throw new Error(data.message);
       }
 
-      localStorage.setItem('token', data.accessToken)
       sessionStorage.setItem('userId', data.user.id)
-
       window.location.href = "/tasks";
     } catch (err) {
       if (err instanceof Error) {

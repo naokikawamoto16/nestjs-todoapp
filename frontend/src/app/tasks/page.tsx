@@ -44,9 +44,7 @@ export default function TaskApp() {
     const fetchTasks = async () => {
       try {
         const res = await fetch('http://localhost:3001/tasks', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+          credentials: 'include',
         })
         
         if (!res.ok) {

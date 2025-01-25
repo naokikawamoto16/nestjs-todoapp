@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
@@ -20,10 +21,18 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User, @Res({ passthrough: true }) res: Response) {
     const payload: Payload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload);
+    
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    });
+
     return {
-      accessToken: this.jwtService.sign(payload),
       user: {
         id: user.id,
         email: user.email
