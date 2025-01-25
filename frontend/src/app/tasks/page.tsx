@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Header } from '@/components/Header'
 
 type Task = {
   id: string
@@ -200,87 +201,90 @@ export default function TaskApp() {
   })
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <Card>
-        <CardHeader>
-          <CardTitle>ToDo App</CardTitle>
-          <CardDescription>Manage your tasks efficiently</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex space-x-2 mb-4">
-            <Input
-              type="text"
-              placeholder="Add a new task"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addTask()}
-            />
-            <Button onClick={addTask} className="bg-sky-600 hover:bg-sky-700">
-              <Plus className="mr-2 h-4 w-4" /> Add
-            </Button>
-          </div>
-          {loading ? (
-            <div className="text-center">Loading tasks...</div>
-          ) : error ? (
-            <div className="text-red-600 text-center">{error}</div>
-          ) : (
-            <ul className="space-y-2">
-              {filteredTasks.map(task => (
-                <li key={task.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={task.completed}
-                    onCheckedChange={() => toggleTask(task.id)}
-                  />
-                  {editingId === task.id ? (
-                    <div className="flex-1 flex items-center space-x-2">
-                      <Input
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && saveEdit(task.id)}
-                      />
-                      <Button size="sm" onClick={() => saveEdit(task.id)} className="bg-sky-600 hover:bg-sky-700">
-                        <Check className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={cancelEdit}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <span 
-                      className={`flex-1 ${task.completed ? 'line-through text-gray-500' : ''}`}
-                      onClick={() => startEditing(task.id, task.name)}
-                    >
-                      {task.name}
-                    </span>
-                  )}
-                  {editingId !== task.id && (
-                    <>
-                      <Button size="sm" variant="outline" onClick={() => startEditing(task.id, task.name)}>
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button variant="destructive" size="sm" onClick={() => deleteTask(task.id)}>
-                        Delete
-                      </Button>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-        <CardFooter>
-          <Select onValueChange={setFilter}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Filter tasks" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardFooter>
-      </Card>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="container mx-auto p-4 max-w-md">
+        <Card>
+          <CardHeader>
+            <CardTitle>ToDo App</CardTitle>
+            <CardDescription>Manage your tasks efficiently</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex space-x-2 mb-4">
+              <Input
+                type="text"
+                placeholder="Add a new task"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addTask()}
+              />
+              <Button onClick={addTask} className="bg-sky-600 hover:bg-sky-700">
+                <Plus className="mr-2 h-4 w-4" /> Add
+              </Button>
+            </div>
+            {loading ? (
+              <div className="text-center">Loading tasks...</div>
+            ) : error ? (
+              <div className="text-red-600 text-center">{error}</div>
+            ) : (
+              <ul className="space-y-2">
+                {filteredTasks.map(task => (
+                  <li key={task.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={task.completed}
+                      onCheckedChange={() => toggleTask(task.id)}
+                    />
+                    {editingId === task.id ? (
+                      <div className="flex-1 flex items-center space-x-2">
+                        <Input
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && saveEdit(task.id)}
+                        />
+                        <Button size="sm" onClick={() => saveEdit(task.id)} className="bg-sky-600 hover:bg-sky-700">
+                          <Check className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <span 
+                        className={`flex-1 ${task.completed ? 'line-through text-gray-500' : ''}`}
+                        onClick={() => startEditing(task.id, task.name)}
+                      >
+                        {task.name}
+                      </span>
+                    )}
+                    {editingId !== task.id && (
+                      <>
+                        <Button size="sm" variant="outline" onClick={() => startEditing(task.id, task.name)}>
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => deleteTask(task.id)}>
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Select onValueChange={setFilter}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filter tasks" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   )
 }
