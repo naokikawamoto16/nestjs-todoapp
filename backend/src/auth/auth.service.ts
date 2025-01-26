@@ -24,18 +24,18 @@ export class AuthService {
   async login(user: User, @Res({ passthrough: true }) res: Response) {
     const payload: Payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload);
-    
+
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
     return {
       user: {
         id: user.id,
-        email: user.email
+        email: user.email,
       },
     };
   }

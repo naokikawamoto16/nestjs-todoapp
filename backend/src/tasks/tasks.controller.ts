@@ -8,15 +8,13 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TasksService, TaskWithSubtasks } from './tasks.service';
+import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
-import { TasksFilterDto } from './dto/tasks-filter.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -37,18 +35,14 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Request() req: any, @Query() query): Promise<Task[]> {
+  findAll(@Request() req: any): Promise<Task[]> {
     const userId = req.user.id;
-    const tasksFilterDto = new TasksFilterDto(query.completed);
-    return this.tasksService.findAll(userId, tasksFilterDto);
+    return this.tasksService.findAll(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(
-    @Request() req: any,
-    @Param('id') id: string,
-  ): Promise<TaskWithSubtasks> {
+  async findOne(@Request() req: any, @Param('id') id: string): Promise<Task> {
     const userId = req.user.id;
     const task = await this.tasksService.findOne(userId, +id);
     if (!task) throw new NotFoundException('Task not found');

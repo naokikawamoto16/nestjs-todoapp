@@ -87,7 +87,7 @@ describe('TasksService', () => {
         },
       ];
       (prismaService.task.findMany as jest.Mock).mockResolvedValue(expected);
-      const result = await tasksService.findAll(1, { completed: false });
+      const result = await tasksService.findAll(1);
       expect(result).toEqual(expected);
     });
   });
