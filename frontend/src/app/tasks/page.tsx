@@ -76,8 +76,8 @@ export default function TaskApp() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           name: newTask,
           completed: false
@@ -109,8 +109,8 @@ export default function TaskApp() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           completed: !task.completed
         })
@@ -135,9 +135,7 @@ export default function TaskApp() {
     try {
       const res = await fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        credentials: 'include',
       })
 
       if (!res.ok) {
@@ -165,8 +163,8 @@ export default function TaskApp() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           name: editText
         })
@@ -204,7 +202,7 @@ export default function TaskApp() {
       <div className="container mx-auto p-4 max-w-md">
         <Card>
           <CardHeader>
-            <CardTitle>ToDo App</CardTitle>
+            <CardTitle>Tasks</CardTitle>
             <CardDescription>Manage your tasks efficiently</CardDescription>
           </CardHeader>
           <CardContent>
