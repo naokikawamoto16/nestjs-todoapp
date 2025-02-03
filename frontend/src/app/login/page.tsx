@@ -35,7 +35,6 @@ export default function LoginPage() {
         throw new Error(data.message);
       }
 
-      sessionStorage.setItem('userId', data.user.id)
       window.location.href = "/tasks";
     } catch (err) {
       if (err instanceof Error) {

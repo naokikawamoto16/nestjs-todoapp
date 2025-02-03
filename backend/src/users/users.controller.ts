@@ -9,6 +9,7 @@ import {
   NotFoundException,
   HttpCode,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +25,15 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getCurrentUser(@Req() req): Promise<User> {
+    const user = await this.usersService.findOne(req.user.id);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   @ApiBearerAuth()

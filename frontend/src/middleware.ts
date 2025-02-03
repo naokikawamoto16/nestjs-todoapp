@@ -1,25 +1,27 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const isPublicPath = path === '/login' || path === '/signup'
-  
-  const token = request.cookies.get('token')?.value
+  let hasVerified = false
 
-  if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/login', request.nextUrl))
-  }
-
-  if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/tasks', request.nextUrl))
+  if (path !== '/login') {
+    try {
+      const res = await fetch('http://localhost:3001/auth/verify', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      console.log(res.status)
+      if (res.status === 201) {
+        hasVerified = true
+      } else {
+        hasVerified = false
+        return NextResponse.redirect(new URL('/tasks', request.nextUrl))
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 
-export const config = {
-  matcher: [
-    '/tasks',
-    '/login',
-    '/signup'
-  ]
-}
